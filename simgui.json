@@ -1,0 +1,98 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/1310/Gyro": "Gyro",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Gyro": "Gyro"
+    },
+    "windows": {
+      "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "bottom": 1638,
+        "builtin": "2025 Reefscape",
+        "height": 8.051901817321777,
+        "left": 534,
+        "right": 3466,
+        "top": 291,
+        "width": 17.54825210571289,
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "FMSInfo": {
+        "open": true
+      },
+      "LiveWindow": {
+        ".status": {
+          "open": true
+        }
+      },
+      "SmartDashboard": {
+        "1310": {
+          "Drive": {
+            "open": true
+          },
+          "Gyro": {
+            "open": true
+          },
+          "Swerve": {
+            "open": true
+          },
+          "Test Mode": {
+            "open": true
+          },
+          "open": true
+        },
+        "Field": {
+          "double[]##v_/SmartDashboard/Field/XModules": {
+            "open": true
+          },
+          "open": true
+        },
+        "Gyro": {
+          "open": true
+        },
+        "open": true,
+        "swerve": {
+          "double[]##v_/SmartDashboard/swerve/wheelLocations": {
+            "open": true
+          },
+          "open": true
+        }
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      }
+    },
+    "visible": true
+  }
+}
