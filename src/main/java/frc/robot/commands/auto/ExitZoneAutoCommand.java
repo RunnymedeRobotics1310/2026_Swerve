@@ -21,6 +21,7 @@ public class ExitZoneAutoCommand extends SequentialCommandGroup {
     addCommands(new SetAllianceGyroCommand(swerve, 180));
 
     addCommands(
-        new DriveRobotOrientedAtHeadingCommand(swerve, 0.50, 0.00, 180 + allianceOffset).withTimeout(0.55));
+        new DriveRobotOrientedAtHeadingCommand(swerve, 0.50, 0.00, 180 + allianceOffset)
+            .withTimeout(0.55));
   }
 }

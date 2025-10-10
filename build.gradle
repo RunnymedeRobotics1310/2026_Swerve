@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.3.2"
+    id "com.diffplug.spotless" version "6.25.0"
 }
 
 java {
@@ -116,3 +117,21 @@ tasks.withType(JavaCompile) {
 repositories {
     mavenLocal()
 }
+
+// Google Java Format configuration
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat()
+    }
+}
+
+// Task to install git pre-commit hook
+tasks.register('installGitHooks', Copy) {
+    from new File(projectDir, 'scripts/pre-commit')
+    into new File(projectDir, '.git/hooks')
+    fileMode 0755
+}
+
+// Automatically install git hooks on build
+build.dependsOn installGitHooks

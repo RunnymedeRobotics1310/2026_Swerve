@@ -151,7 +151,7 @@ public final class Constants {
 
     public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.051;
 
-    public static final GyroConfig GYRO_CONFIG = GyroConfig.pigeon2(8, true );
+    public static final GyroConfig GYRO_CONFIG = GyroConfig.pigeon2(8, true);
 
     public static final SwerveTranslationConfig TRANSLATION_CONFIG =
         new SwerveTranslationConfig(
