@@ -181,7 +181,7 @@ public final class Constants {
             /* nominal voltage (V) */ 12,
             /* ramp rate 0 to full power (s)*/ 0.25,
             /* angle motor gear ratio */ 150.0 / 7 /* SDS MK4i 150/7:1 */,
-            /* angle motor PID p */ 0.0125,
+            /* angle motor PID p */ 0.009,
             /* angle motor PID i */ 0,
             /* angle motor PID d */ 0,
             /* angle motor PID ff */ 0,
