@@ -161,6 +161,9 @@ bin/
 # IntelliJ
 # .idea folder has its own internal .gitignore so trust it for what to ignore.
 .run
+# Actually ignore the entire .idea folder as the gradle definition is comprehensive and holds most relevant settings
+# Users do need to have the Google Formatter plugin activated though.
+.idea/
 
 # Fleet
 .fleet
