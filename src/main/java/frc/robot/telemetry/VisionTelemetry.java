@@ -1,6 +1,3 @@
-/*
- * Copyright 2025 The Kingsway Digital Company Limited. All rights reserved.
- */
 package frc.robot.telemetry;
 
 import static frc.robot.telemetry.Telemetry.PREFIX;
