@@ -5,7 +5,7 @@ import frc.robot.RunnymedeUtils;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
-public class DriveRobotOrientedCommand extends LoggingCommand {
+public class DriveRobotOrientedAtHeadingCommand extends LoggingCommand {
 
   private final SwerveSubsystem swerve;
   private final double x;
@@ -13,7 +13,7 @@ public class DriveRobotOrientedCommand extends LoggingCommand {
   private final double heading;
   private double allianceHeading;
 
-  public DriveRobotOrientedCommand(SwerveSubsystem swerve, double x, double y, double heading) {
+  public DriveRobotOrientedAtHeadingCommand(SwerveSubsystem swerve, double x, double y, double heading) {
     this.swerve = swerve;
     this.x = x;
     this.y = y;

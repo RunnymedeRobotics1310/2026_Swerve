@@ -60,7 +60,7 @@ public class TeleopDriveCommand extends LoggingCommand {
     // x-axis is positive toward the red alliance, and the y-axis is positive to the left.
     // When the robot is on the red alliance, we need to invert inputs for the stick values
     // to move the robot in the right direction.
-    this.invert = alliance == Alliance.Red;
+    this.invert = (alliance == Alliance.Red);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -79,12 +79,6 @@ public class TeleopDriveCommand extends LoggingCommand {
     // field. Left on the stick (negative x) maps to positive y on the field, and vice versa.
     // Thus, negative x stick axis maps to positive y translation on the field.
     final double vY = -oi.getDriverControllerAxis(LEFT, X);
-
-    // Operator x for fine-tuning robot oriented
-    final double oX = Math.pow(oi.getOperatorControllerAxis(LEFT, Y), 3) * OPERATOR_SPEED_FACTOR;
-
-    // Operator y for fine-tuning robot oriented
-    final double oY = Math.pow(-oi.getOperatorControllerAxis(LEFT, X), 3) * OPERATOR_SPEED_FACTOR;
 
     // Left and right on the right stick will change the direction the robot is facing - its
     // heading. Positive x values on the stick translate to clockwise motion, and vice versa.
@@ -183,22 +177,12 @@ public class TeleopDriveCommand extends LoggingCommand {
       }
     }
 
-    // if driver isn't driving, operator has control
-    if ((vX == 0 && vY == 0 && ccwRotAngularVelPct == 0) && (oX != 0 || oY != 0)) {
-      swerve.driveRobotOriented(
-          oX * TRANSLATION_CONFIG.maxSpeedMPS(),
-          oY * TRANSLATION_CONFIG.maxSpeedMPS(),
-          omegaRadiansPerSecond);
-      rotationSettleTimer.reset();
-      // driver gets priority otherwise
+    if (fieldOriented) {
+      // Field-oriented mode
+      swerve.driveFieldOriented(velocity.getX(), velocity.getY(), omegaRadiansPerSecond);
     } else {
-      if (fieldOriented) {
-        // Field-oriented mode
-        swerve.driveFieldOriented(velocity.getX(), velocity.getY(), omegaRadiansPerSecond);
-      } else {
-        // Robot-oriented mode
-        swerve.driveRobotOriented(velocity.getX(), velocity.getY(), omegaRadiansPerSecond);
-      }
+      // Robot-oriented mode
+      swerve.driveRobotOriented(velocity.getX(), velocity.getY(), omegaRadiansPerSecond);
     }
   }
 

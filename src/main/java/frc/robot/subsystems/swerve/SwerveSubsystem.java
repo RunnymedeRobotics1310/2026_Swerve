@@ -1,7 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import static frc.robot.Constants.Swerve.ULTRASONIC_SENSOR_PORT;
-
 import ca.team1310.swerve.RunnymedeSwerveDrive;
 import ca.team1310.swerve.math.SwerveMath;
 import ca.team1310.swerve.utils.SwerveUtils;
@@ -9,7 +7,6 @@ import ca.team1310.swerve.vision.LimelightAwareSwerveDrive;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RunnymedeUtils;
@@ -23,10 +20,6 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SlewRateLimiter yLimiter;
   private final SlewRateLimiter omegaLimiter;
   private final PIDController headingPIDController;
-  private final AnalogInput ultrasonicDistanceSensor = new AnalogInput(ULTRASONIC_SENSOR_PORT);
-
-  private double ultrasonicVoltage;
-  private double ultrasonicDistanceM;
 
   public SwerveSubsystem(SwerveDriveSubsystemConfig config) {
     this.drive =
@@ -46,13 +39,7 @@ public class SwerveSubsystem extends SubsystemBase {
     Telemetry.drive.enabled = config.telemetryEnabled();
   }
 
-  public void periodic() {
-    ultrasonicVoltage = ultrasonicDistanceSensor.getVoltage();
-    ultrasonicDistanceM = 1.29338 * ultrasonicVoltage - 0.51803;
-
-    Telemetry.drive.ultrasonicDistanceM = Math.round(ultrasonicDistanceM * 1000d) / 1000d;
-    Telemetry.drive.ultrasonicVoltage = ultrasonicVoltage;
-  }
+  public void periodic() {}
 
   /*
    * *********************************************************************************************
@@ -153,10 +140,6 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public boolean lock() {
     return drive.lock();
-  }
-
-  public double getUltrasonicDistanceM() {
-    return ultrasonicDistanceM;
   }
 
   /**

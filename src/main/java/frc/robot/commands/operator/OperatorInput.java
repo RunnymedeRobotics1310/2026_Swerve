@@ -12,16 +12,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.Constants.CoralConstants.CoralPose;
 import frc.robot.RunnymedeUtils;
 import frc.robot.commands.CancelCommand;
 import frc.robot.commands.auto.*;
-import frc.robot.commands.coral.MoveToCoralPoseCommand;
-import frc.robot.commands.coral.intake.IntakeCoralCommand;
-import frc.robot.commands.swervedrive.DriveToVisibleTagCommand;
 import frc.robot.commands.swervedrive.SetAllianceGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
-import frc.robot.subsystems.CoralSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.LimelightVisionSubsystem;
 import java.util.function.Consumer;
@@ -30,9 +25,7 @@ import java.util.function.Consumer;
 public class OperatorInput extends SubsystemBase {
 
   private final XboxController driverController;
-  private final XboxController operatorController;
   private final SwerveSubsystem swerve;
-  private final CoralSubsystem coral;
   private final LimelightVisionSubsystem vision;
 
   private Command autonomousCommand = new InstantCommand();
@@ -40,28 +33,22 @@ public class OperatorInput extends SubsystemBase {
   private boolean matchNearEndTimerStarted = false;
 
   public enum RumblePattern {
-    NONE(0, XboxController.RumbleType.kBothRumble, true, true),
-    BLIP(0.25, XboxController.RumbleType.kBothRumble, true, true),
-    SHORT(0.5, XboxController.RumbleType.kBothRumble, true, true),
-    MEDIUM(1, XboxController.RumbleType.kBothRumble, true, true),
-    RED_ALERT(2, XboxController.RumbleType.kBothRumble, true, true),
-    TAG_ALIGN_LEFT(0.5, XboxController.RumbleType.kLeftRumble, false, true),
-    TAG_ALIGN_RIGHT(0.5, XboxController.RumbleType.kRightRumble, false, true);
+    NONE(0, XboxController.RumbleType.kBothRumble, true),
+    BLIP(0.25, XboxController.RumbleType.kBothRumble, true),
+    SHORT(0.5, XboxController.RumbleType.kBothRumble, true),
+    MEDIUM(1, XboxController.RumbleType.kBothRumble, true),
+    RED_ALERT(2, XboxController.RumbleType.kBothRumble, true),
+    TAG_ALIGN_LEFT(0.5, XboxController.RumbleType.kLeftRumble, false),
+    TAG_ALIGN_RIGHT(0.5, XboxController.RumbleType.kRightRumble, false);
 
     public final double seconds;
     public final XboxController.RumbleType rumbleType;
     public final boolean driverController;
-    public final boolean operatorController;
 
-    RumblePattern(
-        double seconds,
-        XboxController.RumbleType rumbleType,
-        boolean driverController,
-        boolean operatorController) {
+    RumblePattern(double seconds, XboxController.RumbleType rumbleType, boolean driverController) {
       this.seconds = seconds;
       this.rumbleType = rumbleType;
       this.driverController = driverController;
-      this.operatorController = operatorController;
     }
   }
 
@@ -73,36 +60,18 @@ public class OperatorInput extends SubsystemBase {
   private final SendableChooser<Constants.AutoConstants.Delay> delayChooser =
       new SendableChooser<>();
 
-  /*  private final SendableChooser<Constants.AutoConstants.ReefLocation1> reefLocation1Chooser =
-      new SendableChooser<>();
-  private final SendableChooser<Constants.AutoConstants.ReefLocation2> reefLocation2Chooser =
-      new SendableChooser<>();
-  private final SendableChooser<Constants.AutoConstants.ReefLocation3> reefLocation3Chooser =
-      new SendableChooser<>();
-  private final SendableChooser<Constants.AutoConstants.ReefPosition1> reefPosition1Chooser =
-      new SendableChooser<>();
-  private final SendableChooser<Constants.AutoConstants.ReefPosition2> reefPosition2Chooser =
-      new SendableChooser<>();
-  private final SendableChooser<Constants.AutoConstants.ReefPosition3> reefPosition3Chooser =
-      new SendableChooser<>(); */
-
   /**
    * Construct an OperatorInput class that is fed by a DriverController and an OperatorController.
    *
    * @param driverControllerPort on the driver station which the driver joystick is plugged into
-   * @param operatorControllerPort on the driver station which the aux joystick is plugged into
    */
   public OperatorInput(
       int driverControllerPort,
-      int operatorControllerPort,
       double deadband,
       SwerveSubsystem swerve,
-      CoralSubsystem coral,
       LimelightVisionSubsystem vision) {
     driverController = new GameController(driverControllerPort, deadband);
-    operatorController = new GameController(operatorControllerPort, deadband);
     this.swerve = swerve;
-    this.coral = coral;
     this.vision = vision;
   }
 
@@ -114,9 +83,7 @@ public class OperatorInput extends SubsystemBase {
    * <p>NOTE: This routine must only be called once from the RobotContainer
    */
   public void configureButtonBindings(
-      SwerveSubsystem driveSubsystem,
-      CoralSubsystem coralSubsystem,
-      LimelightVisionSubsystem visionSubsystem) {
+      SwerveSubsystem driveSubsystem, LimelightVisionSubsystem visionSubsystem) {
 
     // System Test Command
     new Trigger(
@@ -132,80 +99,6 @@ public class OperatorInput extends SubsystemBase {
     // Reset Gyro
     new Trigger(() -> driverController.getBackButton())
         .onTrue(new SetAllianceGyroCommand(driveSubsystem, 0));
-
-    // Set Yaw
-    // TODO: Remove!  Practice Field Only!
-    new Trigger(() -> operatorController.getBackButton())
-        .onTrue(new SetAllianceGyroCommand(driveSubsystem, -60));
-
-    // Compact (X button)
-    new Trigger(() -> driverController.getXButton() || operatorController.getXButton())
-        .onTrue(new MoveToCoralPoseCommand(CoralPose.COMPACT, coralSubsystem));
-
-    /*
-     * Set Score Height (POV)
-     */
-    // Y (delivery), A (intake) for arm position
-    new Trigger(() -> operatorController.getPOV() == 0)
-        .onTrue(new MoveToCoralPoseCommand(CoralPose.SCORE_L4, coralSubsystem));
-    new Trigger(() -> operatorController.getPOV() == 270 && !isAutoAlignReef())
-        .onTrue(new MoveToCoralPoseCommand(CoralPose.SCORE_L3, coralSubsystem));
-    new Trigger(() -> operatorController.getPOV() == 180)
-        .onTrue(new MoveToCoralPoseCommand(CoralPose.SCORE_L2, coralSubsystem));
-    new Trigger(() -> operatorController.getPOV() == 90 && !isAutoAlignReef())
-        .onTrue(new MoveToCoralPoseCommand(CoralPose.SCORE_L1, coralSubsystem));
-
-    /*
-     * Set remove algae poses
-     */
-    new Trigger(
-            () ->
-                operatorController.getPOV() == 270
-                    && operatorController.getRightBumperButton()
-                    && !isAutoAlignReef())
-        .onTrue(new MoveToCoralPoseCommand(CoralPose.REMOVE_HIGH_ALGAE, coralSubsystem));
-    new Trigger(
-            () -> operatorController.getPOV() == 180 && operatorController.getRightBumperButton())
-        .onTrue(new MoveToCoralPoseCommand(CoralPose.REMOVE_LOW_ALGAE, coralSubsystem));
-
-    /*
-     * Coral Intake Buttons
-     */
-    new Trigger(() -> isAlignLeftStation() || isAlignRightStation())
-        .onTrue(new IntakeCoralCommand(coralSubsystem, false));
-
-    new Trigger(() -> driverController.getYButton())
-        .onTrue(new IntakeCoralCommand(coralSubsystem, true));
-
-    /*
-     * Climb Buttons
-     */
-
-    //    // climb
-    //    new Trigger(() -> driverController.getPOV() == 0)
-    //            .onTrue(new ClimbCommand(true, climbSubsystem));
-    //
-    //    // anti-climb
-    //    new Trigger(() -> driverController.getPOV() == 180)
-    //            .onTrue(new ClimbCommand(false, climbSubsystem));
-    //
-    //    new Trigger(() -> driverController.getPOV() == 270)
-    //            .onTrue(new AutoClimbCommand(climbSubsystem));
-    //
-    //    new Trigger(() -> Timer.getMatchTime() < 15 && RobotState.isTeleop())
-    //            .onTrue(new AutoClimbCommand(climbSubsystem));
-    //
-    //    new Trigger(this::isToggleCompressor).onTrue(new
-    // ToggleCompressorCommand(pneumaticsSubsystem));
-
-    new Trigger(() -> (isAutoAlignReef() && operatorController.getPOV() == 270))
-        .onTrue(new DriveToVisibleTagCommand(driveSubsystem, visionSubsystem, true));
-    //                .alongWith(new MoveToCoralPoseCommand(CoralPose.SCORE_L4, coral)));
-
-    new Trigger(() -> (isAutoAlignReef() && operatorController.getPOV() == 90))
-        .onTrue(new DriveToVisibleTagCommand(driveSubsystem, visionSubsystem, false));
-    //                            .alongWith(new MoveToCoralPoseCommand(CoralPose.SCORE_L4,
-    // coral)));
   }
 
   /*
@@ -213,8 +106,7 @@ public class OperatorInput extends SubsystemBase {
    * Do not end the command while the button is pressed
    */
   public boolean isCancel() {
-    return (driverController.getStartButton() && !driverController.getBackButton())
-        || (operatorController.getStartButton());
+    return (driverController.getStartButton() && !driverController.getBackButton());
   }
 
   public boolean isZeroGyro() {
@@ -272,54 +164,6 @@ public class OperatorInput extends SubsystemBase {
     return 0;
   }
 
-  public double getOperatorControllerAxis(Stick stick, Axis axis) {
-    switch (stick) {
-      case LEFT:
-        switch (axis) {
-          case X:
-            return operatorController.getLeftX();
-          case Y:
-            return operatorController.getLeftY();
-        }
-        break;
-      case RIGHT:
-        switch (axis) {
-          case X:
-            return operatorController.getRightX();
-        }
-        break;
-    }
-
-    return 0;
-  }
-
-  /*
-   * Default Coral Command
-   */
-  public double getElevatorInput() {
-    return operatorController.getRightY();
-  }
-
-  public double getArmStick() {
-    return operatorController.getRightX();
-  }
-
-  public boolean getEjectButton() {
-    return operatorController.getLeftBumperButton();
-  }
-
-  public boolean getInjectButton() {
-    return operatorController.getBButton();
-  }
-
-  public boolean getPlant() {
-    return operatorController.getRightTriggerAxis() > 0.5;
-  }
-
-  public boolean isAutoAlignReef() {
-    return operatorController.getLeftTriggerAxis() > 0.1;
-  }
-
   // ALIGN CORAL STATION ANGLE
   public boolean isAlignLeftStation() {
     return driverController.getLeftTriggerAxis() > 0.5;
@@ -330,23 +174,14 @@ public class OperatorInput extends SubsystemBase {
   }
 
   /*
-   * Compressor enable/disable
-   */
-  public boolean isToggleCompressor() {
-    return operatorController.getRightBumperButton() && operatorController.getAButton();
-  }
-
-  /*
    * Support for haptic feedback to the driver
    */
   public void startVibrate() {
     driverController.setRumble(GenericHID.RumbleType.kBothRumble, 1);
-    operatorController.setRumble(GenericHID.RumbleType.kBothRumble, 1);
   }
 
   public void stopVibrate() {
     driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0);
-    operatorController.setRumble(GenericHID.RumbleType.kBothRumble, 0);
   }
 
   @Override
@@ -409,9 +244,6 @@ public class OperatorInput extends SubsystemBase {
       if (currentRumblePattern.driverController) {
         driverController.setRumble(currentRumblePattern.rumbleType, rumbleAmount);
       }
-      if (currentRumblePattern.operatorController) {
-        operatorController.setRumble(currentRumblePattern.rumbleType, rumbleAmount);
-      }
     }
   }
 
@@ -420,13 +252,8 @@ public class OperatorInput extends SubsystemBase {
     SmartDashboard.putData("1310/auto/Auto Selector", autoPatternChooser);
 
     autoPatternChooser.setDefaultOption(
-        "3 Coral Left", Constants.AutoConstants.AutoPattern.SCORE_3_LEFT);
-    autoPatternChooser.addOption("Do Nothing", Constants.AutoConstants.AutoPattern.DO_NOTHING);
+        "Do Nothing", Constants.AutoConstants.AutoPattern.DO_NOTHING);
     autoPatternChooser.addOption("Exit Zone", Constants.AutoConstants.AutoPattern.EXIT_ZONE);
-    autoPatternChooser.addOption(
-        "1 Coral Center", Constants.AutoConstants.AutoPattern.SCORE_1_CENTER);
-    autoPatternChooser.addOption(
-        "3 Coral Right", Constants.AutoConstants.AutoPattern.SCORE_3_RIGHT);
 
     autoPatternChooser.onChange(
         new Consumer<Constants.AutoConstants.AutoPattern>() {
@@ -478,9 +305,6 @@ public class OperatorInput extends SubsystemBase {
 
     return switch (patternChoice) {
       case EXIT_ZONE -> new ExitZoneAutoCommand(swerve, delay);
-      case SCORE_3_LEFT -> new Score3L4LeftAutoCommand(swerve, coral, vision, delay);
-      case SCORE_3_RIGHT -> new Score3L4RightAutoCommand(swerve, coral, vision, delay);
-      case SCORE_1_CENTER -> new Score1CoralCenterAutoCommand(swerve, coral, vision, delay);
 
       default -> new InstantCommand();
     };

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OiConstants;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.commands.swervedrive.TeleopDriveCommand;
-import frc.robot.subsystems.CoralSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.LimelightVisionSubsystem;
 
@@ -24,14 +23,11 @@ public class RobotContainer {
       new SwerveSubsystem(Constants.Swerve.SUBSYSTEM_CONFIG);
   private final LimelightVisionSubsystem visionSubsystem =
       new LimelightVisionSubsystem(Constants.VisionConstants.VISION_CONFIG, swerveDriveSubsystem);
-  private final CoralSubsystem coralSubsystem = new CoralSubsystem();
   private final OperatorInput operatorInput =
       new OperatorInput(
           OiConstants.DRIVER_CONTROLLER_PORT,
-          OiConstants.OPERATOR_CONTROLLER_PORT,
           OiConstants.CONTROLLER_DEADBAND,
           swerveDriveSubsystem,
-          coralSubsystem,
           visionSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -41,7 +37,7 @@ public class RobotContainer {
         new TeleopDriveCommand(swerveDriveSubsystem, visionSubsystem, operatorInput));
 
     // Configure the trigger bindings
-    operatorInput.configureButtonBindings(swerveDriveSubsystem, coralSubsystem, visionSubsystem);
+    operatorInput.configureButtonBindings(swerveDriveSubsystem, visionSubsystem);
 
     operatorInput.initAutoSelectors();
   }

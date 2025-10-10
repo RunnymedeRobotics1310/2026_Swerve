@@ -63,7 +63,6 @@ public final class Constants {
   public static final class OiConstants {
 
     public static final int DRIVER_CONTROLLER_PORT = 0;
-    public static final int OPERATOR_CONTROLLER_PORT = 1;
     public static final double CONTROLLER_DEADBAND = .2;
 
     /**
@@ -83,12 +82,6 @@ public final class Constants {
      * against the max translational speed.
      */
     public static final double SLOW_SPEED_FACTOR = .1;
-
-    /**
-     * Operator tune factor for tuning robot oriented at reef. This factor will be multiplied
-     * against the max translational speed.
-     */
-    public static final double OPERATOR_SPEED_FACTOR = 0.1;
   }
 
   public static final class FieldConstants {
@@ -206,9 +199,8 @@ public final class Constants {
             /* drive motor PID i */ 0,
             /* drive motor PID d */ 0,
             /* drive motor PID ff */ 1 / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
-                // TODO: FIXME: KEEP THIS ZERO BUT SET IN CONTROLLER BASED
-                // NOTE: https://www.revrobotics.com/development-spark-max-users-manual/#section-3-4
-            // ON VELOCITY
+            // TODO: FIXME: KEEP THIS ZERO BUT SET IN CONTROLLER BASED ON VELOCITY
+            // NOTE: https://www.revrobotics.com/development-spark-max-users-manual/#section-3-4
             /* drive motor PID izone */ 0);
 
     private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
@@ -293,10 +285,6 @@ public final class Constants {
             TRANSLATION_CONFIG,
             ROTATION_CONFIG,
             TelemetryConfig.drive);
-
-    // Ultrasonic port
-    public static final int ULTRASONIC_SENSOR_PORT = 0;
-    public static final double SCORING_DISTANCE_TOLERANCE = 0.05;
   }
 
   public static final class AutoConstants {
@@ -304,9 +292,6 @@ public final class Constants {
     public enum AutoPattern {
       DO_NOTHING,
       EXIT_ZONE,
-      SCORE_3_LEFT,
-      SCORE_3_RIGHT,
-      SCORE_1_CENTER,
     }
 
     public enum Delay {
@@ -422,140 +407,6 @@ public final class Constants {
     }
   }
 
-  public static final class CoralConstants {
-
-    /*
-     * Motor CAN IDs and inversions
-     */
-    public static final int ELEVATOR_MOTOR_CAN_ID = 40;
-    public static final int ARM_MOTOR_CAN_ID = 41;
-    public static final int INTAKE_MOTOR_CAN_ID = 42;
-    public static final boolean ELEVATOR_MOTOR_INVERTED = true;
-    public static final boolean ARM_MOTOR_INVERTED = false;
-    public static final boolean INTAKE_MOTOR_INVERTED = false;
-    /*
-     * Elevator Constants
-     */
-    public static final double ELEVATOR_MAX_SPEED = 1;
-    public static final double ELEVATOR_MAX_HEIGHT = 158;
-    public static final double ELEVATOR_TOLERANCE = 1;
-    public static final double ELEVATOR_MAX_SLEW = 0.2;
-    public static final double ELEVATOR_P = 0.05;
-    // Maximum manual tuning speed
-    public static final double ELEVATOR_TUNE_MAX_SPEED = 0.2;
-    // Safety constants near the limits
-    public static final double ELEVATOR_SLOW_ZONE_SPEED = 0.25;
-    public static final double ELEVATOR_SLOW_ZONE = 15; // encoder counts
-    public static final double ELEVATOR_METERS_PER_ENCODER_COUNT =
-        0.745 / 122.13; // TODO: fixme: WRONG
-    public static final double THOMAS_STARTING_HEIGHT = 0.88; // m
-    /*
-     * Arm Constants
-     */
-    public static final double ARM_MAX_SPEED = 0.6;
-    public static final double ARM_LOWER_LIMIT_POSITION = 0;
-    public static final double ARM_UPPER_LIMIT_POSITION = 126;
-    public static final double ARM_CAMERA_THRESHOLD_POSITION = 100;
-    public static final boolean ARM_ANGLE_ENCODER_INVERTED = false;
-    // Set the encoder offset so that the encoder reads 0.1 rotations against the hard stop
-    // This is so that the angle can go negative instead of back to 360 deg when slightly
-    // less than zero. This constant was read off the REV Hardware Client Absolute Encoder page
-    public static final double ARM_ANGLE_ENCODER_OFFSET = 0.3506509;
-    // Maximum manual tuning speed
-    public static final double ARM_TUNE_MAX_SPEED = 0.2;
-    // Pseudo PID and safe zone constants
-    public static final double ARM_ANGLE_TOLERANCE = 1.5;
-    public static final double ARM_FAST_SPEED = 0.5;
-    public static final double ARM_SLOW_ZONE_SPEED = 0.15;
-    public static final double ARM_SLOW_ZONE_ANGLE = 10;
-    /*
-     * Intake Constants
-     */
-    public static final double CORAL_INTAKE_SPEED = 0.5;
-    public static final double CORAL_OUTAKE_SPEED = 0.8;
-    public static final double CORAL_OUTAKE_SLOW_SPEED = -0.5;
-    public static final double CORAL_EJECT_SPEED = 0.7;
-    public static final double PLANT_ROTATIONS = 30;
-
-    // Elevator Heights in encoder counts
-    public enum ElevatorHeight {
-      COMPACT(0),
-      CLOSE_INTAKE(41),
-      FAR_INTAKE(32),
-      LEVEL_1(0),
-      LEVEL_2(3),
-      LEVEL_3(57),
-      LEVEL_4(ELEVATOR_MAX_HEIGHT),
-      REMOVE_LOW_ALGAE(18.5),
-      REMOVE_HIGH_ALGAE(80);
-
-      public final double encoderCount;
-
-      ElevatorHeight(double encoderCount) {
-        this.encoderCount = encoderCount;
-      }
-    }
-
-    // Arm Angles in degrees
-    public enum ArmAngle {
-      COMPACT(-1),
-      INTAKE(21),
-      LEVEL_1(0),
-      LEVEL_2(120),
-      LEVEL_3(126),
-      LEVEL_4(112),
-      REMOVE_ALGAE(74);
-
-      public final double angle;
-
-      ArmAngle(double angle) {
-        this.angle = angle;
-      }
-    }
-
-    public enum DesiredDistanceToTargetCM {
-      INTAKE(20),
-      LEVEL_1(20),
-      LEVEL_2(20),
-      LEVEL_3(20),
-      LEVEL_4(26),
-      REMOVE_ALGAE(20);
-
-      public final double distance;
-
-      DesiredDistanceToTargetCM(double distance) {
-        this.distance = distance;
-      }
-
-      public double getDistance() {
-        return distance;
-      }
-    }
-
-    // How far to the left or right you need to be from a reef tag to score
-    public static final double OFFSET_FROM_TAG_FOR_SCORING = 14;
-
-    public enum CoralPose {
-      COMPACT(ElevatorHeight.COMPACT, ArmAngle.COMPACT),
-      CLOSE_INTAKE(ElevatorHeight.CLOSE_INTAKE, ArmAngle.INTAKE),
-      FAR_INTAKE(ElevatorHeight.FAR_INTAKE, ArmAngle.INTAKE),
-      SCORE_L1(ElevatorHeight.LEVEL_1, ArmAngle.LEVEL_1),
-      SCORE_L2(ElevatorHeight.LEVEL_2, ArmAngle.LEVEL_2),
-      SCORE_L3(ElevatorHeight.LEVEL_3, ArmAngle.LEVEL_3),
-      SCORE_L4(ElevatorHeight.LEVEL_4, ArmAngle.LEVEL_4),
-      REMOVE_LOW_ALGAE(ElevatorHeight.REMOVE_LOW_ALGAE, ArmAngle.REMOVE_ALGAE),
-      REMOVE_HIGH_ALGAE(ElevatorHeight.REMOVE_HIGH_ALGAE, ArmAngle.REMOVE_ALGAE);
-
-      public final ElevatorHeight elevatorHeight;
-      public final ArmAngle armAngle;
-
-      CoralPose(ElevatorHeight elevatorHeight, ArmAngle armAngle) {
-        this.elevatorHeight = elevatorHeight;
-        this.armAngle = armAngle;
-      }
-    }
-  }
-
   public enum BotTarget {
     // Blue Field Targets
     BLUE_AMP(new Translation3d(1.8415, 8.2042, 0.873252)),
@@ -606,16 +457,5 @@ public final class Constants {
     public String toString() {
       return "BotTarget: " + name() + " at " + location;
     }
-  }
-
-  public static final class UsefulPoses {
-
-    public static final Pose2d SCORE_BLUE_AMP =
-        (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.6, Rotation2d.fromDegrees(90)));
-    public static final Pose2d SCORE_RED_AMP =
-        (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.6, Rotation2d.fromDegrees(90)));
-
-    public static final Pose2d BLUE_2_2_20 = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
-    public static final Pose2d RED_2_2_20 = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
   }
 }

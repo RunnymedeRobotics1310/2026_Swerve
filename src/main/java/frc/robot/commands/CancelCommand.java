@@ -18,6 +18,6 @@ public class CancelCommand extends LoggingCommand {
 
   @Override
   public void execute() {
-    swerve.driveFieldOriented(0, 0, 0);
+    swerve.stop();
   }
 }
