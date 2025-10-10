@@ -1,6 +1,6 @@
-# Runnymede Robotics 2025 Swerve
+# Runnymede Robotics 2026 Swerve
 
-This repository is the code that operates FRC Team 1310's 2025 swerve drive.
+This repository is the code that operates FRC Team 1310's 2026 swerve drive.
 
 ## Local Development
 
