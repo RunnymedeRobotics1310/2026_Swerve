@@ -65,7 +65,7 @@ dependencies {
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 
-    implementation 'ca.team1310:swerve:3.3.7'
+    implementation 'ca.team1310:swerve:3.3.8'
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
@@ -116,6 +116,7 @@ tasks.withType(JavaCompile) {
 
 repositories {
     mavenLocal()
+    mavenCentral()
 }
 
 // Google Java Format configuration
