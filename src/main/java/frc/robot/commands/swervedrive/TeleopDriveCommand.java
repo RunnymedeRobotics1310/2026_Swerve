@@ -168,7 +168,7 @@ public class TeleopDriveCommand extends LoggingCommand {
       }
 
       // Set omega
-      if (headingSetpointDeg == null) {
+      if (headingSetpointDeg == null || velocity.getNorm() < 0.05) {
         omegaRadiansPerSecond = 0;
       } else {
         headingSetpointDeg = normalizeDegrees(headingSetpointDeg);
