@@ -10,6 +10,8 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/1310/Gyro": "Gyro",
+      "/SmartDashboard/1310/auto/Auto Selector": "String Chooser",
+      "/SmartDashboard/1310/auto/Delay Selector": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Gyro": "Gyro"
     },
@@ -21,7 +23,6 @@
       },
       "/SmartDashboard/Field": {
         "bottom": 1638,
-        "builtin": "2025 Reefscape",
         "height": 8.051901817321777,
         "left": 534,
         "right": 3466,
@@ -60,6 +61,9 @@
           "open": true
         },
         "Field": {
+          "double[]##v_/SmartDashboard/Field/Robot": {
+            "open": true
+          },
           "double[]##v_/SmartDashboard/Field/XModules": {
             "open": true
           },
@@ -91,7 +95,8 @@
       },
       "Subscribers": {
         "open": true
-      }
+      },
+      "open": true
     },
     "visible": true
   }
