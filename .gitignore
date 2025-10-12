@@ -170,6 +170,8 @@ bin/
 
 # Simulation GUI and other tools window save file
 *-window.json
+# Actually we do want to keep these so that devs can improve the sim UI
+!simgui-window.json
 
 # Simulation data log directory
 logs/
