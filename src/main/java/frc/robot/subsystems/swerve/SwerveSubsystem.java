@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve;
 
 import ca.team1310.swerve.RunnymedeSwerveDrive;
-import ca.team1310.swerve.math.SwerveMath;
 import ca.team1310.swerve.utils.SwerveUtils;
 import ca.team1310.swerve.vision.LimelightAwareSwerveDrive;
 import edu.wpi.first.math.controller.PIDController;
@@ -60,7 +59,25 @@ public class SwerveSubsystem extends SubsystemBase {
     omega = omegaLimiter.calculate(omega);
 
     if (this.config.enabled()) {
-      this.drive.drive(x, y, omega);
+      this.drive.driveRobotOriented(x, y, omega);
+    }
+  }
+
+  /**
+   * Add limiters to the change in drive values. Note this may not scale evenly - one may reach
+   * desired speed before another.
+   *
+   * @param x m/s
+   * @param y m/s
+   * @param omega rad/s
+   */
+  private void driveSafelyFieldOriented(double x, double y, double omega) {
+    //    x = xLimiter.calculate(x);
+    //    y = yLimiter.calculate(y);
+    //    omega = omegaLimiter.calculate(omega);
+
+    if (this.config.enabled()) {
+      this.drive.driveFieldOriented(x, y, omega);
     }
   }
 
@@ -107,29 +124,11 @@ public class SwerveSubsystem extends SubsystemBase {
     Telemetry.drive.fieldOrientedDeltaToPoseX = 0;
     Telemetry.drive.fieldOrientedDeltaToPoseY = 0;
     Telemetry.drive.fieldOrientedDeltaToPoseHeading = 0;
-
-    driveFieldOrientedInternal(x, y, omega);
-  }
-
-  /*
-   * INTERNAL method for driving field-oriented. This should be called by another method that
-   * updates
-   * telemetry values fieldOrientedDeltaToPoseX, fieldOrientedDeltaToPoseY,
-   * fieldOrientedDeltaToPoseHeading.
-   *
-   * @param x
-   *
-   * @param y
-   *
-   * @param omega
-   */
-  private void driveFieldOrientedInternal(double x, double y, double omega) {
     Telemetry.drive.fieldOrientedVelocityX = x;
     Telemetry.drive.fieldOrientedVelocityY = y;
     Telemetry.drive.fieldOrientedVelocityOmega = omega;
 
-    var robotOriented = SwerveMath.toRobotOriented(x, y, Math.toRadians(drive.getYaw()));
-    driveSafely(robotOriented[0], robotOriented[1], omega);
+    driveSafelyFieldOriented(x, y, omega);
   }
 
   /**
