@@ -72,9 +72,9 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param omega rad/s
    */
   private void driveSafelyFieldOriented(double x, double y, double omega) {
-    //    x = xLimiter.calculate(x);
-    //    y = yLimiter.calculate(y);
-    //    omega = omegaLimiter.calculate(omega);
+    x = xLimiter.calculate(x);
+    y = yLimiter.calculate(y);
+    omega = omegaLimiter.calculate(omega);
 
     if (this.config.enabled()) {
       this.drive.driveFieldOriented(x, y, omega);
