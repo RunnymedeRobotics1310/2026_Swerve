@@ -166,10 +166,10 @@ public final class Constants {
 
     public static final SwerveRotationConfig ROTATION_CONFIG =
         new SwerveRotationConfig(
-            /* max rot vel (rad/s) */ Rotation2d.fromRotations(1.5).getRadians(),
-            /* defaultRotVelocityRadPS (rad/s) */ Rotation2d.fromRotations(0.75).getRadians(),
-            /* max rotation accel (rad/s/s) */ Rotation2d.fromRotations(2).getRadians(),
-            /* heading PID p */ 0.004, // Rads/Deg
+            /* max rot vel (deg/s) */ Rotation2d.fromRotations(1.5).getDegrees(),
+            /* defaultRotVelocityDegPS (deg/s) */ Rotation2d.fromRotations(0.75).getDegrees(),
+            /* max rotation accel (deg/s/s) */ Rotation2d.fromRotations(2).getDegrees(),
+            /* heading PID p */ 0.004, // Deg/Deg
             /* heading PID i */ 0,
             /* heading PID d */ 0);
 
@@ -199,8 +199,6 @@ public final class Constants {
             /* drive motor PID i */ 0,
             /* drive motor PID d */ 0,
             /* drive motor PID ff */ 1 / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
-            // TODO: FIXME: KEEP THIS ZERO BUT SET IN CONTROLLER BASED ON VELOCITY
-            // NOTE: https://www.revrobotics.com/development-spark-max-users-manual/#section-3-4
             /* drive motor PID izone */ 0);
 
     private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
@@ -265,7 +263,7 @@ public final class Constants {
             Robot.kDefaultPeriod,
             TRANSLATION_CONFIG.maxModuleSpeedMPS(),
             TRANSLATION_CONFIG.maxSpeedMPS(),
-            ROTATION_CONFIG.maxRotVelocityRadPS(),
+            ROTATION_CONFIG.maxRotVelocityDegPS(),
             0.55,
             0.5,
             0.65,

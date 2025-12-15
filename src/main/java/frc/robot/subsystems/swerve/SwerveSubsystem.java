@@ -27,7 +27,7 @@ public class SwerveSubsystem extends SubsystemBase {
     this.config = config;
     this.xLimiter = new SlewRateLimiter(this.config.translationConfig().maxAccelMPS2());
     this.yLimiter = new SlewRateLimiter(this.config.translationConfig().maxAccelMPS2());
-    this.omegaLimiter = new SlewRateLimiter(config.rotationConfig().maxAccelerationRadPS2());
+    this.omegaLimiter = new SlewRateLimiter(config.rotationConfig().maxAccelerationDegPS2());
     headingPIDController =
         new PIDController(
             config.rotationConfig().headingP(),
@@ -227,10 +227,10 @@ public class SwerveSubsystem extends SubsystemBase {
    * heading is specified in degrees, adn the returned value is in radians per second.
    *
    * @param desiredHeadingDegrees the desired heading of the robot
-   * @return the required rotation speed of the robot (omega) in rad/s
+   * @return the required rotation speed of the robot (omega) in deg/s
    */
   public double computeOmega(double desiredHeadingDegrees) {
-    return computeOmega(desiredHeadingDegrees, config.rotationConfig().defaultRotVelocityRadPS());
+    return computeOmega(desiredHeadingDegrees, config.rotationConfig().defaultRotVelocityDegPS());
   }
 
   /**
@@ -238,12 +238,12 @@ public class SwerveSubsystem extends SubsystemBase {
    * heading is specified in degrees, adn the returned value is in radians per second.
    *
    * @param desiredHeadingDegrees the desired heading of the robot
-   * @param maxOmegaRadPerSec the maximum allowable rotation speed of the robot
-   * @return the required rotation speed of the robot (omega) in rad/s
+   * @param maxOmegaDegPerSec the maximum allowable rotation speed of the robot
+   * @return the required rotation speed of the robot (omega) in deg/s
    */
-  public double computeOmega(double desiredHeadingDegrees, double maxOmegaRadPerSec) {
+  public double computeOmega(double desiredHeadingDegrees, double maxOmegaDegPerSec) {
     double omega = headingPIDController.calculate(drive.getYaw(), desiredHeadingDegrees);
-    return Math.min(omega, maxOmegaRadPerSec);
+    return Math.min(omega, maxOmegaDegPerSec);
   }
 
   public double computeTranslateVelocity(double distance, double maxSpeedMPS, double tolerance) {

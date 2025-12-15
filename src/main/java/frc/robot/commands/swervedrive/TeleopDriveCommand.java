@@ -106,15 +106,15 @@ public class TeleopDriveCommand extends LoggingCommand {
     final boolean doFlip = rotate180Val && !prevRotate180Val;
     prevRotate180Val = rotate180Val;
 
-    final double omegaRadiansPerSecond;
-    double desiredOmegaRadiansPerSecond;
+    final double omegaDegreesPerSecond;
+    double desiredOmegaDegreesPerSecond;
     double correctedCcwRotAngularVelPct = ccwRotAngularVelPct;
 
     // Compute Omega
     if (correctedCcwRotAngularVelPct != 0) {
       // User is steering!
-      omegaRadiansPerSecond =
-          Math.pow(correctedCcwRotAngularVelPct, 3) * ROTATION_CONFIG.maxRotVelocityRadPS();
+      omegaDegreesPerSecond =
+          Math.pow(correctedCcwRotAngularVelPct, 3) * ROTATION_CONFIG.maxRotVelocityDegPS();
       // Save previous heading for when we are finished steering and slow enough.
       // headingSetpoint = Rotation2d.fromDegrees(swerve.getYaw());
       headingSetpointDeg = null;
@@ -170,20 +170,20 @@ public class TeleopDriveCommand extends LoggingCommand {
       // Set omega
       if (headingSetpointDeg == null
           || (velocity.getNorm() < 0.05 && Math.abs(headingSetpointDeg - swerve.getYaw()) < 2)) {
-        omegaRadiansPerSecond = 0;
+        omegaDegreesPerSecond = 0;
       } else {
         headingSetpointDeg = normalizeDegrees(headingSetpointDeg);
-        omegaRadiansPerSecond =
-            swerve.computeOmega(headingSetpointDeg, ROTATION_CONFIG.maxRotVelocityRadPS());
+        omegaDegreesPerSecond =
+            swerve.computeOmega(headingSetpointDeg, ROTATION_CONFIG.maxRotVelocityDegPS());
       }
     }
 
     if (fieldOriented) {
       // Field-oriented mode
-      swerve.driveFieldOriented(velocity.getX(), velocity.getY(), omegaRadiansPerSecond);
+      swerve.driveFieldOriented(velocity.getX(), velocity.getY(), omegaDegreesPerSecond);
     } else {
       // Robot-oriented mode
-      swerve.driveRobotOriented(velocity.getX(), velocity.getY(), omegaRadiansPerSecond);
+      swerve.driveRobotOriented(velocity.getX(), velocity.getY(), omegaDegreesPerSecond);
     }
   }
 
