@@ -4,7 +4,9 @@ import static frc.robot.Constants.AutoConstants.FieldLocation;
 
 import ca.team1310.swerve.utils.SwerveUtils;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants;
 import frc.robot.RunnymedeUtils;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -52,15 +54,18 @@ public class DriveToFieldLocationCommand extends LoggingCommand {
 
     double xDif = allianceLocation.getX() - currentPose.getX();
     double yDif = allianceLocation.getY() - currentPose.getY();
+    Translation2d dif = new Translation2d(xDif, yDif);
+    Translation2d transV =
+        swerve.computeVelocity(dif, Constants.Swerve.TRANSLATION_CONFIG.maxSpeedMPS());
 
     double angleDif =
         SwerveUtils.normalizeDegrees(targetHeadingDeg - currentPose.getRotation().getDegrees());
-    //        log("Xdif: " + xDif + " Ydif: " + yDif + " ºdif: " + angleDif);
 
-    swerve.driveFieldOriented(
-        swerve.computeTranslateVelocity(xDif, 3, 0.02),
-        swerve.computeTranslateVelocity(yDif, 3, 0.02),
-        swerve.computeOmega(targetHeadingDeg));
+    double maxOmega = Math.max((Math.toRadians(angleDif) / dif.getNorm()) * transV.getNorm(), .1);
+    double omega = swerve.computeOmega(targetHeadingDeg, maxOmega);
+    System.out.println(maxOmega);
+
+    swerve.driveFieldOriented(transV.getX(), transV.getY(), omega);
   }
 
   @Override
@@ -72,7 +77,7 @@ public class DriveToFieldLocationCommand extends LoggingCommand {
     boolean done =
         (SwerveUtils.isCloseEnough(
                 swerve.getPose().getTranslation(), allianceLocation.getTranslation(), tolerance)
-            && SwerveUtils.isCloseEnough(swerve.getYaw(), targetHeadingDeg, 1));
+            && SwerveUtils.isCloseEnough(swerve.getYaw(), targetHeadingDeg, 2));
     if (done) {
       System.out.println(
           "REACHED DESTINATION: x["

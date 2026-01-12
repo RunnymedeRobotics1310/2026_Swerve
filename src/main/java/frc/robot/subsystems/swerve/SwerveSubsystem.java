@@ -1,17 +1,20 @@
 package frc.robot.subsystems.swerve;
 
 import ca.team1310.swerve.RunnymedeSwerveDrive;
+import ca.team1310.swerve.RunnymedeSwerveSubsystem;
 import ca.team1310.swerve.utils.SwerveUtils;
 import ca.team1310.swerve.vision.LimelightAwareSwerveDrive;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RunnymedeUtils;
 import frc.robot.telemetry.Telemetry;
 
-public class SwerveSubsystem extends SubsystemBase {
+public class SwerveSubsystem implements RunnymedeSwerveSubsystem {
 
   private final RunnymedeSwerveDrive drive;
   private final SwerveDriveSubsystemConfig config;
@@ -246,7 +249,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return Math.min(omega, maxOmegaRadPerSec);
   }
 
-  public double computeTranslateVelocity(double distance, double maxSpeedMPS, double tolerance) {
+  public double oldComputeTranslateVelocity(double distance, double maxSpeedMPS, double tolerance) {
     final double decelZoneMetres = 1.2;
     final double verySlowZone = 0.2;
     final double verySlowSpeed = 0.15;
@@ -275,6 +278,61 @@ public class SwerveSubsystem extends SubsystemBase {
     speed *= Math.signum(distance);
 
     return speed;
+  }
+
+  public Translation2d computeVelocity(Translation2d translationToTravel, double maxSpeed) {
+
+    TrapezoidProfile test =
+        new TrapezoidProfile(
+            new TrapezoidProfile.Constraints(
+                config.translationConfig().maxSpeedMPS(),
+                config.translationConfig().maxAccelMPS2()));
+
+    // todo: replace with PID
+    double distanceMetres = translationToTravel.getNorm();
+
+    // don't worry about tiny translations
+    if (distanceMetres < config.translationConfig().toleranceMetres()) {
+      return new Translation2d();
+    }
+
+    // safety code
+    if (maxSpeed > config.translationConfig().maxSpeedMPS()) {
+      maxSpeed = config.translationConfig().maxSpeedMPS();
+    }
+
+    // ensure that we have enough room to decelerate
+    //    double decelDistance =
+    //        Math.pow(config.translationConfig().maxSpeedMPS(), 2)
+    //            / (2 * config.translationConfig().maxAccelMPS2());
+    //    double decelDistRatio = distanceMetres / decelDistance;
+    //    if (decelDistRatio < 1) {
+    //      maxSpeed *= decelDistRatio;
+    //    }
+
+    //    double speed;
+    //    if (distanceMetres >= decelDistance) {
+    //      // cruising
+    //      speed = maxSpeed;
+    //    } else {
+    //      // decelerating
+    //      double pctToGo = distanceMetres / decelDistance;
+    //      speed = maxSpeed * pctToGo * velocityPIDController.getP();
+    //    }
+
+    double speed = Math.min(maxSpeed, distanceMetres * maxSpeed / 2);
+
+    // Confirm speed is not too slow to move
+    if (speed < config.translationConfig().minSpeedMPS()) {
+      speed = config.translationConfig().minSpeedMPS();
+    }
+
+    Rotation2d angle = translationToTravel.getAngle();
+
+    double xSign = Math.signum(translationToTravel.getX());
+    double ySign = Math.signum(translationToTravel.getY());
+    return new Translation2d(
+        xSign * speed * Math.abs(angle.getCos()), ySign * speed * Math.abs(angle.getSin()));
   }
 
   public double getClosestReefAngle(double currentX, double currentY) {
@@ -306,5 +364,9 @@ public class SwerveSubsystem extends SubsystemBase {
     } else {
       return 0;
     }
+  }
+
+  public RunnymedeSwerveDrive getRunnymedeSwerveDrive() {
+    return drive;
   }
 }

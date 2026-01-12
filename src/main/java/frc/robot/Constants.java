@@ -149,7 +149,7 @@ public final class Constants {
     /** Side to side from the middle of the wheels */
     public static final double TRACK_WIDTH_METRES = inchesToMeters(16.75);
 
-    public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.051;
+    public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.0485;
 
     public static final GyroConfig GYRO_CONFIG = GyroConfig.pigeon2(8, true);
 
@@ -169,7 +169,7 @@ public final class Constants {
             /* max rot vel (rad/s) */ Rotation2d.fromRotations(1.5).getRadians(),
             /* defaultRotVelocityRadPS (rad/s) */ Rotation2d.fromRotations(0.75).getRadians(),
             /* max rotation accel (rad/s/s) */ Rotation2d.fromRotations(2).getRadians(),
-            /* heading PID p */ 0.004, // Rads/Deg
+            /* heading PID p */ 0.033, // Rads/Deg
             /* heading PID i */ 0,
             /* heading PID d */ 0);
 
@@ -199,8 +199,6 @@ public final class Constants {
             /* drive motor PID i */ 0,
             /* drive motor PID d */ 0,
             /* drive motor PID ff */ 1 / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
-            // TODO: FIXME: KEEP THIS ZERO BUT SET IN CONTROLLER BASED ON VELOCITY
-            // NOTE: https://www.revrobotics.com/development-spark-max-users-manual/#section-3-4
             /* drive motor PID izone */ 0);
 
     private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
@@ -215,7 +213,7 @@ public final class Constants {
             11,
             ANGLE_MOTOR_CONFIG,
             12,
-            Rotation2d.fromRotations(0.283203).getDegrees(),
+            Rotation2d.fromRotations(0.281982).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig FRONT_RIGHT =
@@ -228,7 +226,7 @@ public final class Constants {
             21,
             ANGLE_MOTOR_CONFIG,
             22,
-            Rotation2d.fromRotations(0.403809).getDegrees(),
+            Rotation2d.fromRotations(0.411377).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig BACK_RIGHT =
@@ -241,7 +239,7 @@ public final class Constants {
             31,
             ANGLE_MOTOR_CONFIG,
             32,
-            Rotation2d.fromRotations(0.357422).getDegrees(),
+            Rotation2d.fromRotations(0.353271).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig BACK_LEFT =
@@ -254,7 +252,7 @@ public final class Constants {
             41,
             ANGLE_MOTOR_CONFIG,
             42,
-            Rotation2d.fromRotations(0.502441).getDegrees(),
+            Rotation2d.fromRotations(0.506836).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final CoreSwerveConfig CORE_SWERVE_CONFIG =
@@ -324,6 +322,7 @@ public final class Constants {
       PRE_SCORE_RIGHT_6(new Pose2d(6.1660, 3.8609, Rotation2d.fromDegrees(180)), 21, 10, true),
       PRE_INTAKE_CENTRE_LEFT_STATION(new Pose2d(1.139, 7.000, Rotation2d.fromDegrees(126)), 13, 1),
       PRE_INTAKE_CENTRE_RIGHT_STATION(new Pose2d(1.139, 1.052, Rotation2d.fromDegrees(234)), 12, 2),
+      TEST_POSE(new Pose2d(1, 2, Rotation2d.k180deg)),
 
       // Legacy Alliance Specific Locations
       blueRightOuterStation(new Pose2d(1.15, 1.02, Rotation2d.fromDegrees(234)), 12, 2),
