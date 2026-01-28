@@ -1,6 +1,5 @@
 package frc.robot.commands.operator;
 
-import ca.team1310.swerve.gyro.GetWheelRadiusCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -107,8 +106,6 @@ public class OperatorInput extends SubsystemBase {
             new SequentialCommandGroup(
                 new SetAllianceGyroCommand(driveSubsystem, 0)
                     .andThen(new SetPoseCommand(swerve, new Pose2d()))));
-
-    new Trigger(() -> driverController.getXButton()).onTrue(new GetWheelRadiusCommand(swerve));
 
     new Trigger(() -> driverController.getYButton())
         .onTrue(
