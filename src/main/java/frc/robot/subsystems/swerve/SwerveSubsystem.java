@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve;
 
 import ca.team1310.swerve.RunnymedeSwerveDrive;
-import ca.team1310.swerve.RunnymedeSwerveSubsystem;
 import ca.team1310.swerve.utils.SwerveUtils;
 import ca.team1310.swerve.vision.LimelightAwareSwerveDrive;
 import edu.wpi.first.math.controller.PIDController;
@@ -11,10 +10,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RunnymedeUtils;
 import frc.robot.telemetry.Telemetry;
 
-public class SwerveSubsystem implements RunnymedeSwerveSubsystem {
+public class SwerveSubsystem extends SubsystemBase {
 
   private final RunnymedeSwerveDrive drive;
   private final SwerveDriveSubsystemConfig config;
@@ -364,9 +364,5 @@ public class SwerveSubsystem implements RunnymedeSwerveSubsystem {
     } else {
       return 0;
     }
-  }
-
-  public RunnymedeSwerveDrive getRunnymedeSwerveDrive() {
-    return drive;
   }
 }
