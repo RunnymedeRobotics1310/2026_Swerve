@@ -278,7 +278,16 @@ public final class Constants {
 
     private static final LimelightConfig LIMELIGHT_CONFIG =
         new LimelightConfig(
-            VISION_PRIMARY_LIMELIGHT_NAME, FIELD_EXTENT_METRES_X, FIELD_EXTENT_METRES_Y);
+            VISION_PRIMARY_LIMELIGHT_NAME,
+            FIELD_EXTENT_METRES_X,
+            FIELD_EXTENT_METRES_Y,
+            0.4, // baseStdDevXY
+            9999999, // baseStdDevTheta - never trust MT2 heading
+            0.08, // distanceScaleFactor
+            5.0, // maxTrustDistanceMetres
+            1.0, // outlierRejectionThresholdMetres
+            2 // minTagCountForLowStdDev
+            );
 
     public static final SwerveDriveSubsystemConfig SUBSYSTEM_CONFIG =
         new SwerveDriveSubsystemConfig(
