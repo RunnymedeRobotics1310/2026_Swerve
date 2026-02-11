@@ -1,0 +1,154 @@
+{
+  "hubs": [
+    {
+      "x": 107,
+      "y": 91,
+      "width": 1560,
+      "height": 1017,
+      "state": {
+        "sidebar": {
+          "width": 300,
+          "expanded": [
+            "/NT",
+            "/NT/1310",
+            "/NT/1310/OdoDebug",
+            "/NT/1310/OdoDebug/Odometry",
+            "/NT/SmartDashboard",
+            "/NT/SmartDashboard/1310",
+            "/NT/SmartDashboard/1310/OdoDebug",
+            "/NT/SmartDashboard/1310/OdoDebug/Delta",
+            "/NT/SmartDashboard/1310/OdoDebug/Slip",
+            "/1310/OdoDebug",
+            "/1310/OdoDebug/Slip",
+            "/1310/OdoDebug/Delta",
+            "/SmartDashboard/1310",
+            "/SmartDashboard/1310/Drive",
+            "/SmartDashboard",
+            "/SmartDashboard/Field/Robot",
+            "/SmartDashboard/1310/shooter",
+            "/1310/OdoDebug/WheelOnly",
+            "/1310/OdoDebug/Vision",
+            "/SmartDashboard/swerve",
+            "/1310",
+            "/SmartDashboard/Field",
+            "/1310/OdoDebug/Odometry",
+            "/1310/OdoDebug/Odometry/Pose"
+          ]
+        },
+        "tabs": {
+          "selected": 2,
+          "tabs": [
+            {
+              "type": 0,
+              "title": "",
+              "controller": null,
+              "controllerUUID": "umzff6uq7jgiu0zov0x1juujxsz2qw6j",
+              "renderer": "",
+              "controlsHeight": 0
+            },
+            {
+              "type": 1,
+              "title": "Line Graph",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/1310/OdoDebug//Delta/wheelVsVisionHeading",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/1310/OdoDebug//Delta/wheelVsVision",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "ik3umoe8vjrf5bs9n66xnsww04i8cp8u",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 3,
+              "title": "3D Field",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "NT:1310/OdoDebug/WheelOnly/Pose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2026 KitBot"
+                    }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "NT:1310/OdoDebug/Vision/Pose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2026 KitBot",
+                      "color": "#00ff00"
+                    }
+                  },
+                  {
+                    "type": "robot",
+                    "logKey": "NT:1310/OdoDebug/Odometry/Pose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "Duck Bot"
+                    }
+                  }
+                ],
+                "game": "FRC:2026 Field"
+              },
+              "controllerUUID": "i4hde7zl9cfp3ibrko7dv4snn5lg2955",
+              "renderer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  -7.947532311616987,
+                  4.321769168892066,
+                  0.6313164957318392
+                ],
+                "cameraTarget": [
+                  -3.5323596219915676,
+                  -2.3982501440482142,
+                  0.6938073236674036
+                ]
+              },
+              "controlsHeight": 200
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "26.0.0"
+}
