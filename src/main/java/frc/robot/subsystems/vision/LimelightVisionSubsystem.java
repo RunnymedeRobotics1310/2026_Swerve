@@ -22,6 +22,7 @@ public class LimelightVisionSubsystem extends SubsystemBase {
   private final LimelightBotPose thomasBotPoseCache = new LimelightBotPose();
 
   private final SwerveSubsystem swerve;
+  private boolean initialVisionLockAcquired = false;
 
   public LimelightVisionSubsystem(VisionConfig visionConfig, SwerveSubsystem swerve) {
     this.swerve = swerve;
@@ -50,9 +51,22 @@ public class LimelightVisionSubsystem extends SubsystemBase {
     nikolaBotPoseCache.update(nikolaMegaTag.getAtomic());
     thomasBotPoseCache.update(thomasMegaTag.getAtomic());
 
+    // On first valid vision lock, reset odometry so both the fused and wheel-only
+    // estimators start from the actual field position instead of (0,0).
+    if (!initialVisionLockAcquired && nikolaBotPoseCache.isPoseValid()) {
+      swerve.resetOdometry(nikolaBotPoseCache.getPose());
+      initialVisionLockAcquired = true;
+    }
+
     // Check for tx alignment on both cams and rumble
     notifyOnTxZero(nikolaBotPoseCache, OperatorInput.RumblePattern.TAG_ALIGN_LEFT);
     notifyOnTxZero(thomasBotPoseCache, OperatorInput.RumblePattern.TAG_ALIGN_RIGHT);
+
+    // Update swerve subsystem with vision pose for Field2d and odometry debugging
+    swerve.updateVisionPose(
+        nikolaBotPoseCache.getPose(),
+        nikolaBotPoseCache.getTimestampSeconds(),
+        nikolaBotPoseCache.isPoseValid());
 
     // Update telemetry
     updateTelemetry();
@@ -210,6 +224,33 @@ public class LimelightVisionSubsystem extends SubsystemBase {
    */
   public double getTagCount() {
     return nikolaBotPoseCache.getTagCount();
+  }
+
+  /**
+   * Get the latest vision pose with validity information.
+   *
+   * @return the vision pose from the primary limelight (nikola)
+   */
+  public Pose2d getVisionPose() {
+    return nikolaBotPoseCache.getPose();
+  }
+
+  /**
+   * Get the timestamp of the latest vision measurement.
+   *
+   * @return the timestamp in seconds (FPGA time)
+   */
+  public double getVisionTimestamp() {
+    return nikolaBotPoseCache.getTimestampSeconds();
+  }
+
+  /**
+   * Check if the current vision pose is valid.
+   *
+   * @return true if the vision pose is valid and can be used for odometry correction
+   */
+  public boolean isVisionPoseValid() {
+    return nikolaBotPoseCache.isPoseValid();
   }
 
   /**

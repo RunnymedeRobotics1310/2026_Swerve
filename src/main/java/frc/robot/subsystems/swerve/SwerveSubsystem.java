@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RunnymedeUtils;
 import frc.robot.telemetry.Telemetry;
 
@@ -39,9 +40,18 @@ public class SwerveSubsystem extends SubsystemBase {
     headingPIDController.enableContinuousInput(-180, 180);
     headingPIDController.setTolerance(2);
     Telemetry.drive.enabled = config.telemetryEnabled();
+    // Note: Field2d visualization is already provided by RunnymedeSwerve's FieldAwareSwerveDrive
   }
 
-  public void periodic() {}
+  @Override
+  public void periodic() {
+    if (Constants.TelemetryConfig.odometryDebugEnabled) {
+      // Update odometry debug telemetry with current poses
+      // Note: Field2d visualization is already provided by RunnymedeSwerve's FieldAwareSwerveDrive
+      Telemetry.odometryDebug.updateOdometryPose(getPose());
+      Telemetry.odometryDebug.updateWheelOnlyPose(drive.getWheelOnlyPose());
+    }
+  }
 
   /*
    * *********************************************************************************************
@@ -151,6 +161,23 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public Pose2d getPose() {
     return drive.getPose(); // todo: fixme:
+  }
+
+  /**
+   * Update the vision pose for odometry debugging telemetry. This should be called by the vision
+   * subsystem when a new vision measurement is available.
+   *
+   * <p>Note: Vision pose fusion into odometry is handled by RunnymedeSwerve's
+   * LimelightAwareSwerveDrive.
+   *
+   * @param visionPose the vision-measured pose
+   * @param timestamp the timestamp of the vision measurement
+   * @param isValid whether the vision pose is valid
+   */
+  public void updateVisionPose(Pose2d visionPose, double timestamp, boolean isValid) {
+    if (Constants.TelemetryConfig.odometryDebugEnabled) {
+      Telemetry.odometryDebug.updateVisionPose(visionPose, timestamp, isValid);
+    }
   }
 
   public double getYaw() {

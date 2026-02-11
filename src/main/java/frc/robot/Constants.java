@@ -43,6 +43,9 @@ public final class Constants {
     public static boolean coral = false;
     public static boolean climb = false;
     public static boolean pneumatics = false;
+
+    /** Enable odometry debugging telemetry for comparing wheel odometry vs vision */
+    public static boolean odometryDebugEnabled = true;
   }
 
   public static final class RobotConfig {
@@ -56,7 +59,7 @@ public final class Constants {
     public static final VisionConfig VISION_CONFIG =
         new VisionConfig(0, 0, 0.7, 0.1, .5, true, Constants.TelemetryConfig.vision);
 
-    public static final String VISION_PRIMARY_LIMELIGHT_NAME = "nikola";
+    public static final String VISION_PRIMARY_LIMELIGHT_NAME = "hugh";
     public static final String VISION_SECONDARY_LIMELIGHT_NAME = "thomas";
   }
 
@@ -149,7 +152,7 @@ public final class Constants {
     /** Side to side from the middle of the wheels */
     public static final double TRACK_WIDTH_METRES = inchesToMeters(16.75);
 
-    public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.0485;
+    public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.0490;
 
     public static final GyroConfig GYRO_CONFIG = GyroConfig.pigeon2(8, true);
 

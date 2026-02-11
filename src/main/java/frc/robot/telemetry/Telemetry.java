@@ -7,6 +7,7 @@ public class Telemetry {
   public static Test test = new Test();
   public static DriveTelemetry drive = new DriveTelemetry();
   public static VisionTelemetry vision = new VisionTelemetry();
+  public static OdometryDebugTelemetry odometryDebug = new OdometryDebugTelemetry();
 
   private Telemetry() {}
 
@@ -14,5 +15,6 @@ public class Telemetry {
     test.post();
     drive.post();
     vision.post();
+    odometryDebug.post();
   }
 }

@@ -1,6 +1,5 @@
 package frc.robot.commands.operator;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotState;
@@ -12,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.RunnymedeUtils;
@@ -19,7 +19,6 @@ import frc.robot.commands.CancelCommand;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.swervedrive.DriveToFieldLocationCommand;
 import frc.robot.commands.swervedrive.SetAllianceGyroCommand;
-import frc.robot.commands.swervedrive.SetPoseCommand;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.LimelightVisionSubsystem;
@@ -100,12 +99,18 @@ public class OperatorInput extends SubsystemBase {
     // Cancel Command
     new Trigger(this::isCancel).whileTrue(new CancelCommand(driveSubsystem));
 
-    // Reset Gyro
+    // Reset Gyro, wait for Limelight to get updated yaw, then reset pose to vision if available
     new Trigger(() -> driverController.getBackButton())
         .onTrue(
             new SequentialCommandGroup(
-                new SetAllianceGyroCommand(driveSubsystem, 0)
-                    .andThen(new SetPoseCommand(swerve, new Pose2d()))));
+                new SetAllianceGyroCommand(driveSubsystem, 0),
+                new WaitCommand(0.1),
+                new InstantCommand(
+                    () -> {
+                      if (visionSubsystem.isVisionPoseValid()) {
+                        swerve.resetOdometry(visionSubsystem.getVisionPose());
+                      }
+                    })));
 
     new Trigger(() -> driverController.getYButton())
         .onTrue(
