@@ -61,9 +61,9 @@ public class DriveToFieldLocationCommand extends LoggingCommand {
     double angleDif =
         SwerveUtils.normalizeDegrees(targetHeadingDeg - currentPose.getRotation().getDegrees());
 
-    double maxOmega = Math.max((Math.toRadians(angleDif) / dif.getNorm()) * transV.getNorm(), .1);
+    double maxOmega =
+        Math.max((Math.toRadians(Math.abs(angleDif)) / dif.getNorm()) * transV.getNorm(), .1);
     double omega = swerve.computeOmega(targetHeadingDeg, maxOmega);
-    System.out.println(maxOmega);
 
     swerve.driveFieldOriented(transV.getX(), transV.getY(), omega);
   }

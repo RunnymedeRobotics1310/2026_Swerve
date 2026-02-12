@@ -162,7 +162,7 @@ public final class Constants {
             /* min speed (m/s) */ 1.0,
             /* max speed (m/s) */ 4.8,
             /* max module speed (m/s) */ 5.36,
-            /* max acceleration (m/s/s) */ 42.0,
+            /* max acceleration (m/s/s) */ 10.0,
             /* velocity PID p */ 1.2,
             /* velocity PID i */ 0,
             /* velocity PID d */ 0);
@@ -182,7 +182,7 @@ public final class Constants {
             /* inverted? */ true,
             /* current limit (A) */ 20,
             /* nominal voltage (V) */ 12,
-            /* ramp rate 0 to full power (s)*/ 0.25,
+            /* ramp rate 0 to full power (s)*/ 0.1,
             /* angle motor gear ratio */ 150.0 / 7 /* SDS MK4i 150/7:1 */,
             /* angle motor PID p */ 0.009,
             /* angle motor PID i */ 0,
@@ -196,7 +196,7 @@ public final class Constants {
             /* inverted? */ false,
             /* current limit (A) */ 40,
             /* nominal voltage (V) */ 12,
-            /* ramp rate 0 to full power (s)*/ 0.25, // TODO: FIXME: TRY LOWERING THIS A LOT
+            /* ramp rate 0 to full power (s)*/ 0.02,
             /* drive motor gear ratio */ 6.75 /* SDS MK4i L2 --> 6.75:1 */,
             /* drive motor PID p */ 0.075,
             /* drive motor PID i */ 0,
