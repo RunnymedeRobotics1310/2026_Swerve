@@ -3,6 +3,8 @@ package frc.robot.subsystems.swerve;
 import ca.team1310.swerve.RunnymedeSwerveDrive;
 import ca.team1310.swerve.utils.SwerveUtils;
 import ca.team1310.swerve.vision.LimelightAwareSwerveDrive;
+import edu.wpi.first.math.MathSharedStore;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,8 +21,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private final RunnymedeSwerveDrive drive;
   private final SwerveDriveSubsystemConfig config;
-  private final SlewRateLimiter xLimiter;
-  private final SlewRateLimiter yLimiter;
+  private Translation2d prevLimitedVelocity = new Translation2d();
+  private double prevLimitTime;
   private final SlewRateLimiter omegaLimiter;
   private final PIDController headingPIDController;
 
@@ -29,8 +31,7 @@ public class SwerveSubsystem extends SubsystemBase {
         new LimelightAwareSwerveDrive(
             config.coreConfig(), config.gyroConfig(), config.limelightConfig());
     this.config = config;
-    this.xLimiter = new SlewRateLimiter(this.config.translationConfig().maxAccelMPS2());
-    this.yLimiter = new SlewRateLimiter(this.config.translationConfig().maxAccelMPS2());
+    this.prevLimitTime = MathSharedStore.getTimestamp();
     this.omegaLimiter = new SlewRateLimiter(config.rotationConfig().maxAccelerationRadPS2());
     headingPIDController =
         new PIDController(
@@ -59,16 +60,48 @@ public class SwerveSubsystem extends SubsystemBase {
    */
 
   /**
-   * Add limiters to the change in drive values. Note this may not scale evenly - one may reach
-   * desired speed before another.
+   * 2D vector acceleration limiter. Limits the magnitude of the velocity change vector per
+   * timestep, ensuring acceleration never exceeds maxAccelMPS2 in any direction. This eliminates
+   * the sqrt(2) diagonal problem of independent X/Y limiting.
+   */
+  private Translation2d limitTranslationAcceleration(double x, double y) {
+    double currentTime = MathSharedStore.getTimestamp();
+    double dt = currentTime - prevLimitTime;
+    prevLimitTime = currentTime;
+
+    if (dt > 0.1) {
+      // Robot was likely disabled or there was a long gap — reset to current target
+      prevLimitedVelocity = new Translation2d(x, y);
+      return prevLimitedVelocity;
+    }
+
+    double dx = x - prevLimitedVelocity.getX();
+    double dy = y - prevLimitedVelocity.getY();
+    double changeMag = Math.sqrt(dx * dx + dy * dy);
+    double maxChange = config.translationConfig().maxAccelMPS2() * dt;
+
+    if (changeMag > maxChange && changeMag > 1e-9) {
+      double scale = maxChange / changeMag;
+      prevLimitedVelocity =
+          new Translation2d(
+              prevLimitedVelocity.getX() + dx * scale, prevLimitedVelocity.getY() + dy * scale);
+    } else {
+      prevLimitedVelocity = new Translation2d(x, y);
+    }
+    return prevLimitedVelocity;
+  }
+
+  /**
+   * Add limiters to the change in drive values.
    *
    * @param x m/s
    * @param y m/s
    * @param omega rad/s
    */
   private void driveSafely(double x, double y, double omega) {
-    x = xLimiter.calculate(x);
-    y = yLimiter.calculate(y);
+    Translation2d limited = limitTranslationAcceleration(x, y);
+    x = limited.getX();
+    y = limited.getY();
     omega = omegaLimiter.calculate(omega);
 
     if (this.config.enabled()) {
@@ -77,16 +110,16 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Add limiters to the change in drive values. Note this may not scale evenly - one may reach
-   * desired speed before another.
+   * Add limiters to the change in drive values.
    *
    * @param x m/s
    * @param y m/s
    * @param omega rad/s
    */
   private void driveSafelyFieldOriented(double x, double y, double omega) {
-    x = xLimiter.calculate(x);
-    y = yLimiter.calculate(y);
+    Translation2d limited = limitTranslationAcceleration(x, y);
+    x = limited.getX();
+    y = limited.getY();
     omega = omegaLimiter.calculate(omega);
 
     if (this.config.enabled()) {
@@ -118,7 +151,7 @@ public class SwerveSubsystem extends SubsystemBase {
     driveSafely(x, y, omega);
   }
 
-  /** Stop all motors as fast as possible */
+  /** Stop the robot with controlled deceleration through the acceleration limiter. */
   public void stop() {
     driveRobotOriented(0, 0, 0);
   }
@@ -273,7 +306,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public double computeOmega(double desiredHeadingDegrees, double maxOmegaRadPerSec) {
     double omega = headingPIDController.calculate(drive.getYaw(), desiredHeadingDegrees);
-    return Math.min(omega, maxOmegaRadPerSec);
+    return MathUtil.clamp(omega, -maxOmegaRadPerSec, maxOmegaRadPerSec);
   }
 
   public double oldComputeTranslateVelocity(double distance, double maxSpeedMPS, double tolerance) {
