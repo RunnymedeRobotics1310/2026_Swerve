@@ -152,7 +152,7 @@ public final class Constants {
     /** Side to side from the middle of the wheels */
     public static final double TRACK_WIDTH_METRES = inchesToMeters(16.75);
 
-    public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.0490;
+    public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.0510;
 
     public static final GyroConfig GYRO_CONFIG = GyroConfig.pigeon2(8, true);
 
