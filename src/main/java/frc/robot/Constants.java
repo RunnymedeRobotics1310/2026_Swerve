@@ -154,6 +154,8 @@ public final class Constants {
 
     public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.0490;
 
+    public static final double NOMINAL_VOLTAGE = 12;
+
     public static final GyroConfig GYRO_CONFIG = GyroConfig.pigeon2(8, true);
 
     public static final SwerveTranslationConfig TRANSLATION_CONFIG =
@@ -187,7 +189,9 @@ public final class Constants {
             /* angle motor PID p */ 0.009,
             /* angle motor PID i */ 0,
             /* angle motor PID d */ 0,
-            /* angle motor PID ff */ 0,
+            /* angle motor PID kV */ 0,
+            /* angle motor PID kA */ 0,
+            /* angle motor PID kS */ 0,
             /* angle motor PID izone */ 0);
 
     private static final MotorConfig DRIVE_MOTOR_CONFIG =
@@ -201,7 +205,9 @@ public final class Constants {
             /* drive motor PID p */ 0.075,
             /* drive motor PID i */ 0,
             /* drive motor PID d */ 0,
-            /* drive motor PID ff */ 1 / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
+            /* drive motor PID kV */ NOMINAL_VOLTAGE / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
+            /* drive motor PID kA */ 0,
+            /* drive motor PID kS */ 0,
             /* drive motor PID izone */ 0);
 
     private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
