@@ -274,7 +274,7 @@ public final class Constants {
             TRANSLATION_CONFIG.maxSpeedMPS(),
             ROTATION_CONFIG.maxRotVelocityRadPS(),
             0.55,
-            0.5,
+            0.1,
             0.65,
             FRONT_LEFT,
             FRONT_RIGHT,
