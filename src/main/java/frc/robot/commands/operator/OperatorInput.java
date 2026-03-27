@@ -320,6 +320,10 @@ public class OperatorInput extends SubsystemBase {
           default -> 0;
         };
 
+    if (patternChoice == null) {
+      return new InstantCommand();
+    }
+
     return switch (patternChoice) {
       case EXIT_ZONE -> new ExitZoneAutoCommand(swerve, delay);
 
