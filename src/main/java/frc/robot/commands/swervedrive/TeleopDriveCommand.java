@@ -20,6 +20,7 @@ import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.LimelightVisionSubsystem;
+import frc.robot.telemetry.Telemetry;
 
 public class TeleopDriveCommand extends LoggingCommand {
 
@@ -92,6 +93,9 @@ public class TeleopDriveCommand extends LoggingCommand {
     final boolean isSlow = oi.isSlowMode();
     //    final boolean isSlow = false;
     final boolean isFast = oi.isFastMode();
+
+    Telemetry.drive.isBoosted = isFast;
+
     final double boostFactor =
         isSlow ? SLOW_SPEED_FACTOR : (isFast ? MAX_SPEED_FACTOR : GENERAL_SPEED_FACTOR);
 

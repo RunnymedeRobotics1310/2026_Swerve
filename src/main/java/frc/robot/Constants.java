@@ -64,7 +64,7 @@ public final class Constants {
   }
 
   public static final class LightingConstants {
-    public static final int LIGHT_STRIP_PWM_PORT = 0;
+    public static final int LED_STRING_PWM_PORT = 0;
     public static final int LED_STRING_LENGTH = 30;
   }
 

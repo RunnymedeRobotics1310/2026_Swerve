@@ -42,6 +42,8 @@ public class DriveTelemetry {
   public double ultrasonicDistanceM = Double.MIN_VALUE;
   public double ultrasonicVoltage = Double.MIN_VALUE;
 
+  public boolean isBoosted = false;
+
   void post() {
 
     SmartDashboard.putNumber(PREFIX + "Drive/Ultrasonic Distance M", ultrasonicDistanceM);
