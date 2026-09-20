@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OiConstants;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.commands.swervedrive.TeleopDriveCommand;
+import frc.robot.subsystems.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.LimelightVisionSubsystem;
 
@@ -29,6 +30,7 @@ public class RobotContainer {
           OiConstants.CONTROLLER_DEADBAND,
           swerveDriveSubsystem,
           visionSubsystem);
+  private final LightingSubsystem lightingSubsystem = new LightingSubsystem(swerveDriveSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

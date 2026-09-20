@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -89,11 +88,6 @@ public class TeleopDriveCommand extends LoggingCommand {
 
     final boolean rotate180Val = oi.getRotate180Val();
 
-    final boolean faceReef = oi.isFaceReef();
-
-    final boolean faceLeftStation = oi.isAlignLeftStation();
-    final boolean faceRightStation = oi.isAlignRightStation();
-
     // Compute boost factor
     final boolean isSlow = oi.isSlowMode();
     //    final boolean isSlow = false;
@@ -135,30 +129,6 @@ public class TeleopDriveCommand extends LoggingCommand {
           log("flipping from setpoint of: " + headingSetpointDeg);
           headingSetpointDeg += 180;
           log("flipped to setpoint of: " + headingSetpointDeg);
-        }
-      }
-
-      if (faceReef) {
-        headingSetpointDeg =
-            swerve.getClosestReefAngle(swerve.getPose().getX(), swerve.getPose().getY());
-      }
-
-      if (faceLeftStation) {
-        if (invert) {
-          headingSetpointDeg =
-              Constants.FieldConstants.TAGS.RED_LEFT_SOURCE.pose.getRotation().getDegrees();
-        } else {
-          headingSetpointDeg =
-              Constants.FieldConstants.TAGS.BLUE_LEFT_SOURCE.pose.getRotation().getDegrees();
-        }
-      }
-      if (faceRightStation) {
-        if (invert) {
-          headingSetpointDeg =
-              Constants.FieldConstants.TAGS.RED_RIGHT_SOURCE.pose.getRotation().getDegrees();
-        } else {
-          headingSetpointDeg =
-              Constants.FieldConstants.TAGS.BLUE_RIGHT_SOURCE.pose.getRotation().getDegrees();
         }
       }
 

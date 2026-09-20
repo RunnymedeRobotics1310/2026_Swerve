@@ -9,15 +9,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.RunnymedeUtils;
 import frc.robot.commands.CancelCommand;
 import frc.robot.commands.auto.*;
-import frc.robot.commands.swervedrive.DriveToFieldLocationCommand;
 import frc.robot.commands.swervedrive.SetAllianceGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -102,20 +99,21 @@ public class OperatorInput extends SubsystemBase {
     // Reset Gyro, wait for Limelight to get updated yaw, then reset pose to vision if available
     new Trigger(() -> driverController.getBackButton())
         .onTrue(
-            new SequentialCommandGroup(
-                new SetAllianceGyroCommand(driveSubsystem, 0),
-                new WaitCommand(0.1),
-                new InstantCommand(
-                    () -> {
-                      if (visionSubsystem.isVisionPoseValid()) {
-                        swerve.resetOdometry(visionSubsystem.getVisionPose());
-                      }
-                    })));
+            //            new SequentialCommandGroup(
+            //                new SetAllianceGyroCommand(driveSubsystem, 0),
+            //                new WaitCommand(0.1),
+            //                new InstantCommand(
+            //                    () -> {
+            //                      if (visionSubsystem.isVisionPoseValid()) {
+            //                        swerve.resetOdometry(visionSubsystem.getVisionPose());
+            //                      }
+            //                    }))
+            new SetAllianceGyroCommand(swerve, 0));
 
-    new Trigger(() -> driverController.getYButton())
-        .onTrue(
-            new DriveToFieldLocationCommand(
-                swerve, Constants.AutoConstants.FieldLocation.TEST_POSE));
+    //    new Trigger(() -> driverController.getYButton())
+    //        .onTrue(
+    //            new DriveToFieldLocationCommand(
+    //                swerve, Constants.AutoConstants.FieldLocation.TEST_POSE));
   }
 
   /*
@@ -156,10 +154,6 @@ public class OperatorInput extends SubsystemBase {
     return driverController.getLeftBumperButton();
   }
 
-  public boolean isFaceReef() {
-    return driverController.getBButton();
-  }
-
   public double getDriverControllerAxis(Stick stick, Axis axis) {
     switch (stick) {
       case LEFT:
@@ -179,15 +173,6 @@ public class OperatorInput extends SubsystemBase {
     }
 
     return 0;
-  }
-
-  // ALIGN CORAL STATION ANGLE
-  public boolean isAlignLeftStation() {
-    return driverController.getLeftTriggerAxis() > 0.5;
-  }
-
-  public boolean isAlignRightStation() {
-    return driverController.getRightTriggerAxis() > 0.5;
   }
 
   /*
