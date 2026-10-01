@@ -64,8 +64,8 @@ public final class Constants {
   }
 
   public static final class LightingConstants {
-    public static final int LED_STRING_PWM_PORT = 0;
-    public static final int LED_STRING_LENGTH = 30;
+    public static final int LED_STRING_PWM_PORT = 9;
+    public static final int LED_STRING_LENGTH = 36;
   }
 
   public static final class OiConstants {
@@ -227,7 +227,7 @@ public final class Constants {
             11,
             ANGLE_MOTOR_CONFIG,
             12,
-            Rotation2d.fromRotations(0.281982).getDegrees(),
+            Rotation2d.fromRotations(0.279785).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig FRONT_RIGHT =
@@ -240,7 +240,7 @@ public final class Constants {
             16,
             ANGLE_MOTOR_CONFIG,
             17,
-            Rotation2d.fromRotations(0.411377).getDegrees(),
+            Rotation2d.fromRotations(0.415283).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig BACK_RIGHT =
@@ -253,7 +253,7 @@ public final class Constants {
             21,
             ANGLE_MOTOR_CONFIG,
             22,
-            Rotation2d.fromRotations(0.353271).getDegrees(),
+            Rotation2d.fromRotations(0.364014).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig BACK_LEFT =
@@ -261,12 +261,12 @@ public final class Constants {
             "backleft",
             new Coordinates(TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
-            25,
+            13,
             DRIVE_MOTOR_CONFIG,
-            26,
+            5,
             ANGLE_MOTOR_CONFIG,
             27,
-            Rotation2d.fromRotations(0.506836).getDegrees(),
+            Rotation2d.fromRotations(0.508545).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final CoreSwerveConfig CORE_SWERVE_CONFIG =

@@ -1,8 +1,8 @@
 package frc.robot.subsystems.swerve;
 
 import ca.team1310.swerve.RunnymedeSwerveDrive;
+import ca.team1310.swerve.odometry.FieldAwareSwerveDrive;
 import ca.team1310.swerve.utils.SwerveUtils;
-import ca.team1310.swerve.vision.LimelightAwareSwerveDrive;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,9 +25,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final PIDController headingPIDController;
 
   public SwerveSubsystem(SwerveDriveSubsystemConfig config) {
-    this.drive =
-        new LimelightAwareSwerveDrive(
-            config.coreConfig(), config.gyroConfig(), config.limelightConfig());
+    this.drive = new FieldAwareSwerveDrive(config.coreConfig(), config.gyroConfig());
     this.config = config;
     this.xLimiter = new SlewRateLimiter(this.config.translationConfig().maxAccelMPS2());
     this.yLimiter = new SlewRateLimiter(this.config.translationConfig().maxAccelMPS2());
