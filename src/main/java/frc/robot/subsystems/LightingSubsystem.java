@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.wpilibj.util.Color.kFirstBlue;
-import static edu.wpi.first.wpilibj.util.Color.kFirstRed;
+import static edu.wpi.first.wpilibj.util.Color.*;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
@@ -24,7 +23,7 @@ public class LightingSubsystem extends SubsystemBase {
   private static final LEDPattern greenLedPattern = LEDPattern.solid(Color.kGreen);
   private static final LEDPattern whiteLedPattern = LEDPattern.solid(Color.kWhite);
   private static final LEDPattern purpleLedPattern = LEDPattern.solid(Color.kDarkViolet);
-  private static final LEDPattern redLedPattern = LEDPattern.solid(Color.kRed);
+  private static final LEDPattern redLedPattern = LEDPattern.solid(kRed);
   private static final LEDPattern blueLedPattern = LEDPattern.solid(Color.kBlue);
   private static final LEDPattern orangeLedPattern = LEDPattern.solid(Color.kOrange);
 
@@ -53,7 +52,7 @@ public class LightingSubsystem extends SubsystemBase {
   public void periodic() {
 
     if (RunnymedeUtils.getRunnymedeAlliance() == DriverStation.Alliance.Red) {
-      alliancePattern = LEDPattern.solid(kFirstRed);
+      alliancePattern = LEDPattern.solid(kRed);
     } else alliancePattern = LEDPattern.solid(kFirstBlue);
 
     if (DriverStation.isEnabled()) {
