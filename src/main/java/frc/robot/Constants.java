@@ -77,13 +77,13 @@ public final class Constants {
      * Standard drive speed factor. Regular teleop drive will use this factor of the max
      * translational speed.
      */
-    public static final double GENERAL_SPEED_FACTOR = .5;
+    public static final double GENERAL_SPEED_FACTOR = .2; // changed from 0.5 to 0.2 for outreach
 
     /**
      * Maximum drive speed factor. When boosting, this factor will be multiplied against the max
      * translational speed.
      */
-    public static final double MAX_SPEED_FACTOR = 1;
+    public static final double MAX_SPEED_FACTOR = 0.3; // changed from 1.0 to 0.30 for outreach
 
     /**
      * Slow mode drive speed factor. When running in slow mode, this factor will be multiplied
